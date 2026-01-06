@@ -1,84 +1,42 @@
-# proyecto_11_test_AAB
-Startup de productos alimenticios | Comportamiento del usuario mediante embudo de ventas | Impacto de cambio con test A/A/B | Homogeneidad
+# 🛒 User Behavior Analysis & A/A/B Testing: Font Impact Study
 
-# ANÁLISIS DE COMPORTAMIENTO DE USUARIO Y TEST A/A/B
+## 🎯 Project Overview
+This project examines user behavior within a food product startup's mobile application. The goal was to understand how users move through the sales funnel and evaluate whether a controversial design change (switching the app's fonts) significantly impacted conversion rates using a rigorous **A/A/B testing** methodology.
 
-## RESUMEN DEL PROYECTO
-El proyecto analiza el comportamiento de usuarios en una aplicación de venta de productos alimenticios mediante:
-1. Estudio del embudo de conversión para identificar puntos críticos
-2. Evaluación de un cambio de diseño (fuentes) mediante test A/A/B
-3. Análisis estadístico para determinar impacto en métricas clave
+## 📉 Conversion Funnel Modeling
+By analyzing event logs, I reconstructed the user journey to identify where the "leaks" in the revenue pipe were occurring.
 
-## OBJETIVO
-1. Comprender el flujo de usuarios a través del embudo de ventas
-2. Determinar si el cambio de fuentes afecta significativamente la conversión
-3. Proporcionar recomendaciones basadas en datos para optimizar la experiencia del usuario
 
-## METODOLOGÍA DE ANÁLISIS
 
-### 1. DESCRIPCIÓN DE LOS DATOS
-- **Dataset:** logs_exp_us.csv (244,126 registros)
-- **Variables clave:**
-  - EventName: Acciones del usuario (5 tipos)
-  - DeviceIDHash: Identificador único de usuario
-  - EventTimestamp: Marca temporal del evento
-  - ExpId: Grupo experimental (246, 247 = control, 248 = tratamiento)
+* **Critical Drop-off:** The transition from **Main Screen** to **Offers Screen** saw a **38% loss** in users. This is the primary area for future UX optimization.
+* **Efficiency:** Once users reach the Cart, **94.7%** complete the purchase, indicating a very efficient checkout process.
 
-### 2. PREPROCESAMIENTO DE DATOS
-- Renombrado de columnas para mayor claridad
-- Conversión de timestamp a formato datetime
-- Filtrado de periodo incompleto (1.16% de eventos)
-- Verificación de grupos experimentales:
-  - Grupo 246: 2,484 usuarios
-  - Grupo 247: 2,513 usuarios
-  - Grupo 248: 2,537 usuarios
+## 🧪 A/A/B Test Methodology
+To ensure the reliability of the results, the experiment was divided into three groups:
+1.  **Group 246 & 247 (Control):** Used to validate that the split-testing mechanism was working correctly (A/A Test).
+2.  **Group 248 (Treatment):** Featured the new font design.
 
-### 3. PRUEBA DE HIPÓTESIS
-#### 3.1 Análisis del Embudo
-**Secuencia identificada:**
-1. MainScreenAppear (98.47% usuarios)
-2. OffersScreenAppear (60.96%)
-3. CartScreenAppear (49.56%)
-4. PaymentScreenSuccessful (46.97%)
+### Statistical Rigor
+I performed **16 statistical hypothesis tests** to compare proportions across all groups and events. To prevent the "look-elsewhere effect" and control the Type I error rate, I applied **Bonferroni correction** to the significance level ($\alpha$).
 
-**Hallazgos clave:**
-- Mayor pérdida: Main → Offers (38.09% de usuarios)
-- 47.7% completan todo el flujo
 
-#### 3.2 Test A/A (Validación grupos control)
-| Evento               | P-valor | Conclusión |
-|----------------------|---------|------------|
-| MainScreenAppear     | 0.7571  | Sin diferencia |
-| OffersScreenAppear   | 0.2481  | Sin diferencia |
-| CartScreenAppear     | 0.2288  | Sin diferencia |
-| PaymentScreenSuccess | 0.1146  | Sin diferencia |
 
-#### 3.3 Test A/B (Control vs Tratamiento)
-| Evento               | P-valor | Diferencia |
-|----------------------|---------|------------|
-| MainScreenAppear     | 0.2942  | No significativa |
-| OffersScreenAppear   | 0.4343  | No significativa |
-| CartScreenAppear     | 0.1818  | No significativa |
-| PaymentScreenSuccess | 0.6004  | No significativa |
+## 📊 Key Findings
+| Test Type | Result | Interpretation |
+| :--- | :--- | :--- |
+| **A/A (246 vs 247)** | ✅ No Significant Difference | The groups are homogeneous; the test setup is reliable. |
+| **A/B (Combined Control vs 248)** | ❌ No Significant Difference | The font change did not impact user conversion. |
 
-## CONCLUSIONES PRINCIPALES
-1. **Embudo de conversión:**
-   - La mayor oportunidad de mejora está en la transición pantalla principal → ofertas
-   - Buen rendimiento en etapas finales (94.78% conversión carrito → pago)
+**Statistical Significance:** All p-values were significantly higher than the adjusted threshold, meaning we fail to reject the null hypothesis.
 
-2. **Test A/A/B:**
-   - Los grupos de control son estadísticamente equivalentes
-   - **No hay evidencia** de que el cambio de fuentes afecte las conversiones
-   - La nueva fuente no muestra impacto (ni positivo ni negativo)
+## 💡 Strategic Recommendations
+* **Do not implement based on conversion:** The data shows the new font is neutral. Unless there are branding or technical reasons, the change doesn't drive growth.
+* **Prioritize the "Main → Offers" Gap:** Instead of cosmetic changes like fonts, the product team should investigate why 38% of users leave the app immediately after the home screen.
+* **Funnel Optimization:** Focus on personalized offers or UI improvements in the initial discovery phase to increase the flow towards the cart.
 
-3. **Recomendaciones:**
-   - No implementar el cambio de fuentes basado en estos resultados
-   - Enfocar esfuerzos en mejorar la transición Main → Offers
-   - Considerar otros elementos de diseño para optimización
+## 🛠️ Tech Stack
+* **Python:** Data processing and statistical engine.
+* **Pandas:** For event sequence modeling and user segmentation.
+* **Statsmodels:** Implementation of Z-tests for proportions.
+* **Seaborn/Matplotlib:** Visualization of the conversion funnel and event distribution.
 
-## TECNOLOGÍAS UTILIZADAS
-- **Python** (Análisis principal)
-- **Pandas** (Procesamiento de datos)
-- **Matplotlib/Seaborn** (Visualizaciones)
-- **SciPy** (Pruebas estadísticas)
-- **Statsmodels** (Pruebas de proporciones)
